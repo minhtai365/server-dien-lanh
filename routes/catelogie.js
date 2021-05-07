@@ -1,0 +1,48 @@
+var express = require('express');
+var router = express.Router();
+var Catelogies = require('../models/catelogie');
+
+//get catelogy
+router.get('/', (req, res, next) => {
+    Catelogies.find((err, dt) => {
+      res.send(dt)
+    })
+  })
+  //create catelogy
+  router.post('/set', (req, res, next) => {
+    if (req.body._id !== undefined) {
+      Catelogies.updateOne({ _id: req.body._id }, [{
+        $set: {
+          "name": req.body.name
+        }
+      }])
+      .then(re=>{        
+        res.status(200).json({ mess: 'Thành công',status:true })
+      })
+      .catch(er=>{
+        res.status(400).json({ mess: 'Thất bại',status:false })
+      })
+    }
+    else {
+      
+      console.log(req.body.name);
+      var now = new Date;
+      var nowlc = new Date().toLocaleString();
+      Catelogies.create({
+        name: req.body.name,
+        created: now,
+        createdlc: nowlc
+      })
+      .then(re=>{       
+        console.log('ok'); 
+        res.status(200).json({ mess: 'Thành công',status:true })
+      })
+      .catch(er=>{
+        
+        console.log('no'); 
+        res.status(400).json({ mess: 'Thất bại',status:false })
+      })
+    }
+  })
+  
+module.exports = router;
