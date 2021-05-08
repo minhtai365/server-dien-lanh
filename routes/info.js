@@ -11,7 +11,7 @@ router.post('/set',(req,res,next)=>{
   console.log(req.body);
   console.log(req.body.email);
   console.log(req.body.map);
-  const {name,email,address,phone,logo,facebook,zalo,map,introduce,paypolicy,shippolicy,warrantypolicy}=req.body;
+  const {name,email,address,phone,logo,facebook,zalo,tiktok,map,introduce,paypolicy,shippolicy,warrantypolicy}=req.body;
   info.find((err,dt)=>{
     if(dt.length!==0){
       console.log("123");
@@ -26,6 +26,7 @@ router.post('/set',(req,res,next)=>{
             'logo':logo,
             'facebook':facebook,
             'zalo':zalo,
+            'tiktok':tiktok,
             'map':map,
             'introduce':introduce,
             'paypolicy':paypolicy,
@@ -52,6 +53,7 @@ router.post('/set',(req,res,next)=>{
             logo:logo,
             facebook:facebook,
             zalo:zalo,
+            tiktok:tiktok,
             map:map,
             introduce:introduce,
             paypolicy:paypolicy,

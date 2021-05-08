@@ -7,6 +7,7 @@ var infoSchema=new Schema({
     phone:{type:String,required:true},
     logo:{type:String,},
     facebook:{type:String},
+    tiktok:{type:String},
     zalo:{type:String},
     map:{type:String},
     introduce:{type:String},
