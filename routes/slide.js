@@ -11,7 +11,7 @@ router.get('/', (req, res, next) => {
   })
   //create types
   router.post('/set', (req, res, next) => {
-    if (req.body._id !== '') {
+    if (req.body._id !== undefined) {
       Imgslide.updateOne({ _id: req.body._id }, [
         {
           $set: {

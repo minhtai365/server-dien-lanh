@@ -10,7 +10,7 @@ router.get('/', (req, res, next) => {
   })
   //create catelogy
   router.post('/set', (req, res, next) => {
-    if (req.body._id !== '') {
+    if (req.body._id !== undefined) {
       Service.updateOne({ _id: req.body._id }, [{
         $set: {
           "name": req.body.name,

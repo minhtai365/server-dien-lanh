@@ -10,11 +10,12 @@ router.get('/', (req, res, next) => {
 })
 //create catelogy
 router.post('/set', (req, res, next) => {
-  if (req.body._id !== '') {
+  if (req.body._id !== undefined) {
     Promotion.updateOne({ _id: req.body._id }, [{
       $set: {
         "name": req.body.name,
-        "content": req.body.content
+        "content": req.body.content,
+        "status": req.body.status
       }
     }])
       .then(re => {
@@ -30,6 +31,7 @@ router.post('/set', (req, res, next) => {
     Promotion.create({
       name: req.body.name,
       content: req.body.content,
+      status: false,
       created: now,
       createdlc: nowlc
     })

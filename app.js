@@ -16,7 +16,7 @@ var promotionRouter = require('./routes/promotion');
 //connect database
 const mongoose = require('mongoose');
 // process.env.DATA_URL_MONGOOSE
-mongoose.connect(process.env.DATA_URL_MONGOOSE||'mongodb://localhost:27017/dienlanh', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.DATA_URL_MONGOOSE || 'mongodb://localhost:27017/dienlanh', { useNewUrlParser: true, useUnifiedTopology: true });
 var cors = require('cors');
 
 var app = express();
@@ -37,17 +37,17 @@ app.use('/info', infoRouter);
 app.use('/catelogies', catelogyRouter);
 app.use('/delete', indexRouter);
 app.use('/service', serviceRouter);
-app.use('/product', productRouter);
+app.use('/products', productRouter);
 app.use('/slide', slideRouter);
 app.use('/promotion', promotionRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

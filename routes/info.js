@@ -8,9 +8,6 @@ router.get('/',(req,res,next)=>{
   })
 })
 router.post('/set',(req,res,next)=>{
-  console.log(req.body);
-  console.log(req.body.email);
-  console.log(req.body.map);
   const {name,email,address,phone,logo,facebook,zalo,tiktok,map,introduce,paypolicy,shippolicy,warrantypolicy}=req.body;
   info.find((err,dt)=>{
     if(dt.length!==0){
