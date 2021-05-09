@@ -9,7 +9,7 @@ var infoSchema=new Schema({
     facebook:{type:String},
     tiktok:{type:String},
     zalo:{type:String},
-    map:{type:String},
+    gps:{type:Object},
     introduce:{type:String},
     paypolicy:{type:String,},
     shippolicy:{type:String,},
