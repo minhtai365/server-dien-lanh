@@ -4,7 +4,7 @@ var multer = require('multer');
 var router = express.Router();
 
 var Imgslide = require('../models/slide');
-
+const { cloudinary } = require('../cdn/cloudinary');
 
 var upload = multer({ dest: './public/uploads/' })
 //get type
@@ -20,15 +20,15 @@ router.post('/status', (req, res, next) => {
         'status': req.body.status,
       }
     }
-  ]) .then(re => {
+  ]).then(re => {
     res.status(200).json({ mess: 'Thành công', status: true })
   })
-  .catch(er => {
-    res.status(400).json({ mess: 'Thất bại', status: false })
-  })
+    .catch(er => {
+      res.status(400).json({ mess: 'Thất bại', status: false })
+    })
 })
 //create types
-router.post('/set', upload.single('slide'), (req, res, next) => {
+router.post('/set', async (req, res, next) => {
 
   // console.log(req.file);
   // console.log('Ngoài');
@@ -39,14 +39,23 @@ router.post('/set', upload.single('slide'), (req, res, next) => {
   //   // Đổi tên của file vừa upload lên, vì multer đang đặt default ko có đuôi file
   //   const newFullPath = `${fullPathInServ}-${orgName}`;
   // fs.renameSync(fullPathInServ, newFullPath);
-  console.log(req.body);
+  // console.log(req.body);
   // console.log(req.body.id=='undefined');
+try {
+  
 
+  const fileStr = req.body.base64Encode;
+  // console.log(fileStr);
+  const uploadFile = await cloudinary.uploader.upload(fileStr, {
+    upload_preset: 'dev_dienlanh'
+  })
+  console.log(uploadFile);
+  console.log(req.body._id);
   if (req.body._id !== undefined) {
     Imgslide.updateOne({ _id: req.body._id }, [
       {
         $set: {
-          'img': req.file.path.split('\\').slice(1).join('/'),
+          'img': uploadFile.url,
         }
       }
     ])
@@ -61,8 +70,8 @@ router.post('/set', upload.single('slide'), (req, res, next) => {
     var now = new Date;
     var nowlc = new Date().toLocaleString();
     Imgslide.create({
-      img: req.file.path.split('\\').slice(1).join('/'),
-      status:true,
+      img: uploadFile.url,
+      status: true,
       created: now,
       createdlc: nowlc
     })
@@ -74,6 +83,10 @@ router.post('/set', upload.single('slide'), (req, res, next) => {
         res.status(400).json({ mess: 'Thất bại', status: false })
       })
   }
+} catch (error) {
+  console.error(error);
+}
+
 });
 //end types
 module.exports = router;

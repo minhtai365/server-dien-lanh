@@ -1,4 +1,7 @@
 var express = require('express');
+
+const { cloudinary } = require('../cdn/cloudinary');
+
 var router = express.Router();
 const Product = require('../models/product');
 router.get('/all', function (req, res, next) {
@@ -16,7 +19,16 @@ router.post('/', function (req, res, next) {
 });
 router.post('/set', (req, res, next) => {
   if (req.body._id !== undefined) {
-    console.log('!und');
+    try {
+      const fileStr = req.body.files;
+      // const uploadRes = cloudinary.uploader.upload(fileStr, {
+      //   upload_preset: 'dev_dienlanh'
+      // });
+      console.log(uploadRes);
+    }
+    catch (err) {
+      console.error(err);
+    }
     Product.updateOne({ _id: req.body._id }, [
       {
         $set: {
