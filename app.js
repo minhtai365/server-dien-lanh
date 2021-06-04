@@ -4,9 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const bodyParser = require("body-parser");
 
 var indexRouter = require('./routes/index');
 var catelogyRouter = require('./routes/catelogie');
+var servicetypeRouter =require('./routes/servicetype');
 var infoRouter = require('./routes/info');
 var productRouter = require('./routes/product');
 var slideRouter = require('./routes/slide');
@@ -22,6 +24,8 @@ var cors = require('cors');
 var app = express();
 app.use(cors());
 
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -35,6 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/', indexRouter);
 app.use('/info', infoRouter);
 app.use('/catelogies', catelogyRouter);
+app.use('/servicetype', servicetypeRouter);
 app.use('/delete', indexRouter);
 app.use('/service', serviceRouter);
 app.use('/products', productRouter);

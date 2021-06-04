@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var productSchema = new Schema({
-    img: { type: String, required: true },
+    img: { type: Array, required: true },
     name: { type: String, required: true },
     producer: { type: String },
     price: { type: Number},

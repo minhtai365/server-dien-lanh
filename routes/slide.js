@@ -49,8 +49,6 @@ try {
   const uploadFile = await cloudinary.uploader.upload(fileStr, {
     upload_preset: 'dev_dienlanh'
   })
-  console.log(uploadFile);
-  console.log(req.body._id);
   if (req.body._id !== undefined) {
     Imgslide.updateOne({ _id: req.body._id }, [
       {
