@@ -22,10 +22,17 @@ router.post('/set', async (req, res, next) => {
   try {
     const fileArr = req.body.files;
     await fileArr.forEach(async (fileStr, index) => {
-      const uploadRes = await cloudinary.uploader.upload(fileStr, {
-        upload_preset: 'dev_dienlanh'
-      });
-      await arrUpload.push(uploadRes.url);
+      
+      if(fileStr.indexOf('res.cloudinary.com')!==-1){
+        console.log(fileStr);
+        arrUpload.push(fileStr);
+      }
+      else{
+        const uploadRes = await cloudinary.uploader.upload(fileStr, {
+          upload_preset: 'dev_dienlanh'
+        });
+        await arrUpload.push(uploadRes.url);
+      }
       if (index === fileArr.length - 1) {
         if (req.body._id !== undefined) {
           console.log(arrUpload);
@@ -34,10 +41,8 @@ router.post('/set', async (req, res, next) => {
               $set: {
                 "name": req.body.name,
                 "price": req.body.price,
-                "sale": req.body.sale,
-                "producer": req.body.producer,
                 "img": arrUpload,
-                "detail": req.body.detail,
+                "post": req.body.post,
                 // "view": 0,
                 "catelogyid": req.body.catelogyid,
               }
@@ -57,11 +62,9 @@ router.post('/set', async (req, res, next) => {
           var pro = {
             name: req.body.name,
             price: req.body.price,
-            sale: req.body.sale,
-            producer: req.body.producer,
             img: arrUpload,
             catelogyid: req.body.catelogyid,
-            detail: req.body.detail,
+            post: req.body.post,
             view: 0,
             created: now,
             createdlc: nowlc
