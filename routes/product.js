@@ -12,20 +12,19 @@ router.get('/all', function (req, res, next) {
 });
 router.get('/home', async function (req, res, next) {
   let arr = [];
-
   await Cate.find().sort('-created').exec(async (err, cate) => {
     await cate.forEach(async (item, i) => {
       await Product.find().exec(async (err, pro) => {
-        
-        let obj ={};
-        obj.name=item.name;
-        obj.data=pro.filter(p => p.catelogyid == item._id);
+        let obj = {};
+        obj._id = item._id;
+        obj.name = item.name;
+        obj.data = pro.filter(p => p.catelogyid == item._id);
         arr[i] = obj;
         if (i === cate.length - 1) {
-          let viewTop = pro.sort((a,b)=>b.view-a.view).slice(0,4);
-          let dt ={};
+          let viewTop = pro.sort((a, b) => b.view - a.view).slice(0, 4);
+          let dt = {};
           dt.cateproduct = arr;
-          dt.topview =viewTop
+          dt.topview = viewTop
           res.status(200).send(dt);
         }
       })
@@ -33,10 +32,10 @@ router.get('/home', async function (req, res, next) {
   });
 });
 router.post('/', async function (req, res, next) {
-  Product.find().sort('-created').exec((err, dt) => {
-    let data = dt;
-    let start = req.body.start;
-    let end = req.body.end;
+  Product.find({}).sort('-created').exec((err, dt) => {
+    let data=dt.filter(x=>x.catelogyid===req.body.id);
+    let start = req.body.current_page * req.body.start;
+    let end = req.body.rows;
     res.status(200).send(data.slice(start, end));
   });
 });
