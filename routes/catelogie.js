@@ -24,8 +24,6 @@ router.get('/', (req, res, next) => {
       })
     }
     else {
-      
-      console.log(req.body.name);
       var now = new Date;
       var nowlc = new Date().toLocaleString();
       Catelogies.create({
@@ -34,12 +32,9 @@ router.get('/', (req, res, next) => {
         createdlc: nowlc
       })
       .then(re=>{       
-        console.log('ok'); 
         res.status(200).json({ mess: 'Thành công',status:true })
       })
       .catch(er=>{
-        
-        console.log('no'); 
         res.status(400).json({ mess: 'Thất bại',status:false })
       })
     }

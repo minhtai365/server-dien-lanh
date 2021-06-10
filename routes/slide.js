@@ -29,9 +29,6 @@ router.post('/status', (req, res, next) => {
 })
 //create types
 router.post('/set', async (req, res, next) => {
-
-  // console.log(req.file);
-  // console.log('Ngoài');
   // const processedFile = req.file || {}; // MULTER xử lý và gắn đối tượng FILE vào req
   //   let orgName = processedFile.originalname || ''; // Tên gốc trong máy tính của người upload
   //   orgName = orgName.trim().replace(/ /g, "-")
@@ -39,13 +36,10 @@ router.post('/set', async (req, res, next) => {
   //   // Đổi tên của file vừa upload lên, vì multer đang đặt default ko có đuôi file
   //   const newFullPath = `${fullPathInServ}-${orgName}`;
   // fs.renameSync(fullPathInServ, newFullPath);
-  // console.log(req.body);
-  // console.log(req.body.id=='undefined');
 try {
   
 
   const fileStr = req.body.base64Encode;
-  // console.log(fileStr);
   const uploadFile = await cloudinary.uploader.upload(fileStr, {
     upload_preset: 'dev_dienlanh'
   })

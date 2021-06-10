@@ -10,7 +10,6 @@ router.get('/all', (req, res, next) => {
   })
   router.get('/:id', (req, res) => {
     Service.find({_id:req.params.id},(err, dt) => {
-      // res.send(dt[0].post)
       if(dt[0].post){
         res.status(200).json({ mess: 'Thành công',status:true,data: dt[0].post})
       }

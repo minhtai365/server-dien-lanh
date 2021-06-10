@@ -11,12 +11,9 @@ router.get('/', (req, res, next) => {
   })
 })
 router.post('/set', async (req, res, next) => {
-  // console.log(req.body.info);
-
   const { _id, name, email, address, phone, facebook, zalo, tiktok, gps, introduce, paypolicy, shippolicy, warrantypolicy, logo } = req.body;
   try {
     const fileStr = logo;
-    // console.log(fileStr);
     const uploadFile = await cloudinary.uploader.upload(fileStr, {
       upload_preset: 'dev_dienlanh'
     })
@@ -45,7 +42,6 @@ router.post('/set', async (req, res, next) => {
             res.status(200).json({ mess: 'Thành công', status: true })
           })
           .catch(er => {
-            console.log(er);
             res.status(400).json({ mess: 'Thất bại', status: false })
           })
       }

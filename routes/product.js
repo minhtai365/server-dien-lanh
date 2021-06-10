@@ -10,6 +10,11 @@ router.get('/all', function (req, res, next) {
     res.status(200).send(dt);
   });
 });
+router.get('/detail/:id', function (req, res, next) {
+  Product.find({ _id: req.params.id }).sort('-created').exec((err, dt) => {
+    res.status(200).send(dt);
+  });
+});
 router.get('/home', async function (req, res, next) {
   let arr = [];
   await Cate.find().sort('-created').exec(async (err, cate) => {
@@ -31,6 +36,7 @@ router.get('/home', async function (req, res, next) {
     })
   });
 });
+
 router.post('/', async function (req, res, next) {
   Product.find({}).sort('-created').exec((err, dt) => {
     let data=dt.filter(x=>x.catelogyid===req.body.id);

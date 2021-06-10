@@ -49,9 +49,7 @@ router.post('/upload-file', fileUpload.single('upload'), async (req, res, next) 
   upload(req);
 });
 router.post('/item', (req, res, next) => {
-  console.log(req.body);
   const id = req.body._id;
-  console.log(id);
   Service.deleteOne({ _id: id })
     .then(re => {
       res.status(200).json({ mess: 'Thành công', status: true })
@@ -104,7 +102,6 @@ module.exports = router;
 //   var dt=db.db("my-database");
 //   dt.collection("user").findOne({roleid:"1"},function(err,res){
 //     if(err) throw err;
-//     console.log(res.username);
 //     dt.close();
 //   })
 // })
