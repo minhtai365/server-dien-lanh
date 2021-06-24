@@ -13,6 +13,11 @@ router.get('/', (req, res, next) => {
     res.send(dt)
   })
 })
+router.get('/active', (req, res, next) => {
+  Imgslide.find({ status: true }, (err, dt) => {
+    res.send(dt)
+  })
+})
 router.post('/status', (req, res, next) => {
   Imgslide.updateOne({ _id: req.body._id }, [
     {
@@ -36,48 +41,48 @@ router.post('/set', async (req, res, next) => {
   //   // Đổi tên của file vừa upload lên, vì multer đang đặt default ko có đuôi file
   //   const newFullPath = `${fullPathInServ}-${orgName}`;
   // fs.renameSync(fullPathInServ, newFullPath);
-try {
-  
+  try {
 
-  const fileStr = req.body.base64Encode;
-  const uploadFile = await cloudinary.uploader.upload(fileStr, {
-    upload_preset: 'dev_dienlanh'
-  })
-  if (req.body._id !== undefined) {
-    Imgslide.updateOne({ _id: req.body._id }, [
-      {
-        $set: {
-          'img': uploadFile.url,
-        }
-      }
-    ])
-      .then(re => {
-        res.status(200).json({ mess: 'Thành công', status: true })
-      })
-      .catch(er => {
-        res.status(400).json({ mess: 'Thất bại', status: false })
-      })
-  }
-  else {
-    var now = new Date;
-    var nowlc = new Date().toLocaleString();
-    Imgslide.create({
-      img: uploadFile.url,
-      status: true,
-      created: now,
-      createdlc: nowlc
+
+    const fileStr = req.body.base64Encode;
+    const uploadFile = await cloudinary.uploader.upload(fileStr, {
+      upload_preset: 'dev_dienlanh'
     })
+    if (req.body._id !== undefined) {
+      Imgslide.updateOne({ _id: req.body._id }, [
+        {
+          $set: {
+            'img': uploadFile.url,
+          }
+        }
+      ])
+        .then(re => {
+          res.status(200).json({ mess: 'Thành công', status: true })
+        })
+        .catch(er => {
+          res.status(400).json({ mess: 'Thất bại', status: false })
+        })
+    }
+    else {
+      var now = new Date;
+      var nowlc = new Date().toLocaleString();
+      Imgslide.create({
+        img: uploadFile.url,
+        status: true,
+        created: now,
+        createdlc: nowlc
+      })
 
-      .then(re => {
-        res.status(200).json({ mess: 'Thành công', status: true })
-      })
-      .catch(er => {
-        res.status(400).json({ mess: 'Thất bại', status: false })
-      })
+        .then(re => {
+          res.status(200).json({ mess: 'Thành công', status: true })
+        })
+        .catch(er => {
+          res.status(400).json({ mess: 'Thất bại', status: false })
+        })
+    }
+  } catch (error) {
+    console.error(error);
   }
-} catch (error) {
-  console.error(error);
-}
 
 });
 //end types
