@@ -19,11 +19,11 @@ router.get('/home', async function (req, res, next) {
   let arr = [];
   await Cate.find().sort('-created').exec(async (err, cate) => {
     await cate.forEach(async (item, i) => {
-      await Product.find().exec(async (err, pro) => {
+      await Product.find(async (err, pro) => {
         let obj = {};
         obj._id = item._id;
         obj.name = item.name;
-        obj.data = pro.filter(p => p.catelogyid == item._id);
+        obj.data = await pro.filter(p => p.catelogyid == item._id);
         arr[i] = obj;
         if (i === cate.length - 1) {
           let viewTop = pro.sort((a, b) => b.view - a.view).slice(0, 4);
@@ -36,13 +36,25 @@ router.get('/home', async function (req, res, next) {
     })
   });
 });
-
 router.post('/', async function (req, res, next) {
   Product.find({}).sort('-created').exec((err, dt) => {
-    let data=dt.filter(x=>x.catelogyid===req.body.id);
+    let data = dt.filter(x => x.catelogyid === req.body.id);
     let start = req.body.current_page * req.body.start;
     let end = req.body.rows;
     res.status(200).send(data.slice(start, end));
+  });
+});
+router.post('/search', async function (req, res, next) {
+  // db.users.find( { 'username' : { '$regex' : req.body.keyWord, '$options' : 'i' } } )
+  Product.find({ 'name': new RegExp(req.body.search, "i" )}).sort('-created').exec((err, dt) => {
+    let start = req.body.current_page * req.body.start;
+    let end = req.body.rows;
+    if(dt.length!==0){
+      res.status(200).send(dt.slice(start,end));
+    }
+    else{
+      res.status(200).send(dt);
+    }
   });
 });
 router.post('/set', async (req, res, next) => {
