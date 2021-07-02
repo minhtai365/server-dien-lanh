@@ -7,7 +7,7 @@ var productSchema = new Schema({
     post: { type: String, required: true },
     view: { type: Number },
     catelogyid: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'catelogies'
     },
     created: { type: Date },

@@ -19,6 +19,7 @@ var promotionRouter = require('./routes/promotion');
 const mongoose = require('mongoose');
 // process.env.DATA_URL_MONGOOSE
 mongoose.connect(process.env.DATA_URL_MONGOOSE || 'mongodb://localhost:27017/dienlanh', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.set('useFindAndModify', false);
 var cors = require('cors');
 
 var app = express();

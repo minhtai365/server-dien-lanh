@@ -5,4 +5,4 @@ var catelogieSchema=new Schema({
     created:{type:Date,required:true},
     createdlc:{type:String,required:true},
 })
-module.exports=mongoose.model('catelogie',catelogieSchema);
+module.exports=mongoose.model('catelogies',catelogieSchema);
