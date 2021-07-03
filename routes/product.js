@@ -53,9 +53,11 @@ router.get('/home', async function (req, res, next) {
     },
     {
       $project: {
-        data: {
-          $slice: ["$data", 0, 1],
-        },
+        data:"$data"
+        //  {
+        //   $slice: ["$data", 0, 1],
+        // }
+        ,
         name: "$cate.name"
       }
     },
@@ -66,7 +68,7 @@ router.get('/home', async function (req, res, next) {
   ).then(async re => {
     let dt = {}
     await Product.find(async (err, pro) => {
-      dt.topview = await pro.sort((a, b) => b.view - a.view).slice(0, 4);
+      dt.topview = await pro.sort((a, b) => b.view - a.view).slice(0, 5);
     });
     dt.cateproduct = re;
     res.status(200).send(dt);
@@ -75,21 +77,32 @@ router.get('/home', async function (req, res, next) {
 
 router.post('/ofcate', async function (req, res, next) {
   Product.find({ catelogyid: req.body.id }).sort('-created').exec((err, dt) => {
-    let start = req.body.current_page * req.body.start;
-    let end = req.body.rows;
-    res.status(200).send(dt.slice(start, end));
+    let start = (req.body.current_page-1) * req.body.rows;
+    let end = start+req.body.rows;
+    let data={};
+    data.data=dt.slice(start, end);
+    data.current_page=req.body.current_page;
+    data.total=dt.length;
+    res.status(200).send(data);
   });
 });
 router.post('/search', async function (req, res, next) {
   // db.users.find( { 'username' : { '$regex' : req.body.keyWord, '$options' : 'i' } } )
   Product.find({ 'name': new RegExp(req.body.search, "i") }).sort('-created').exec((err, dt) => {
-    let start = req.body.current_page * req.body.start;
-    let end = req.body.rows;
+    // let start = req.body.current_page * req.body.start;
+    // let end = req.body.rows;
+    let start = (req.body.current_page-1) * req.body.rows;
+    let end = start+req.body.rows;
+    let data={};
+    data.total=dt.length;
+    data.current_page=req.body.current_page
     if (dt.length !== 0) {
-      res.status(200).send(dt.slice(start, end));
+    data.data=dt.slice(start, end);
+      res.status(200).send(data);
     }
     else {
-      res.status(200).send(dt);
+    data.data=[];
+      res.status(200).send(data);
     }
   });
 });
