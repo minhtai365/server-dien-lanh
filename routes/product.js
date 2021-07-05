@@ -1,10 +1,14 @@
 var express = require('express');
 
 const { cloudinary } = require('../cdn/cloudinary');
-
 var router = express.Router();
 const Product = require('../models/product');
 const Cate = require('../models/catelogie');
+
+
+
+var mongoose = require('mongoose');
+
 router.get('/all', function (req, res, next) {
   Product.find().sort('-created').exec((err, dt) => {
     res.status(200).send(dt);
@@ -53,7 +57,7 @@ router.get('/home', async function (req, res, next) {
     },
     {
       $project: {
-        data:"$data"
+        data: "$data"
         //  {
         //   $slice: ["$data", 0, 1],
         // }
@@ -77,12 +81,12 @@ router.get('/home', async function (req, res, next) {
 
 router.post('/ofcate', async function (req, res, next) {
   Product.find({ catelogyid: req.body.id }).sort('-created').exec((err, dt) => {
-    let start = (req.body.current_page-1) * req.body.rows;
-    let end = start+req.body.rows;
-    let data={};
-    data.data=dt.slice(start, end);
-    data.current_page=req.body.current_page;
-    data.total=dt.length;
+    let start = (req.body.current_page - 1) * req.body.rows;
+    let end = start + req.body.rows;
+    let data = {};
+    data.data = dt.slice(start, end);
+    data.current_page = req.body.current_page;
+    data.total = dt.length;
     res.status(200).send(data);
   });
 });
@@ -91,17 +95,17 @@ router.post('/search', async function (req, res, next) {
   Product.find({ 'name': new RegExp(req.body.search, "i") }).sort('-created').exec((err, dt) => {
     // let start = req.body.current_page * req.body.start;
     // let end = req.body.rows;
-    let start = (req.body.current_page-1) * req.body.rows;
-    let end = start+req.body.rows;
-    let data={};
-    data.total=dt.length;
-    data.current_page=req.body.current_page
+    let start = (req.body.current_page - 1) * req.body.rows;
+    let end = start + req.body.rows;
+    let data = {};
+    data.total = dt.length;
+    data.current_page = req.body.current_page
     if (dt.length !== 0) {
-    data.data=dt.slice(start, end);
+      data.data = dt.slice(start, end);
       res.status(200).send(data);
     }
     else {
-    data.data=[];
+      data.data = [];
       res.status(200).send(data);
     }
   });
@@ -111,7 +115,6 @@ router.post('/set', async (req, res, next) => {
   try {
     const fileArr = req.body.files;
     await fileArr.forEach(async (fileStr, index) => {
-
       if (fileStr.indexOf('res.cloudinary.com') !== -1) {
         arrUpload.push(fileStr);
       }
@@ -121,57 +124,62 @@ router.post('/set', async (req, res, next) => {
         });
         await arrUpload.push(uploadRes.url);
       }
-      if (index === fileArr.length - 1) {
-        if (req.body._id !== undefined) {
-          await Product.updateOne({ _id: req.body._id }, [
-            {
-              $set: {
-                "name": req.body.name,
-                "price": req.body.price,
-                "img": arrUpload,
-                "post": req.body.post,
-                // "view": 0,
-                "catelogyid": req.body.catelogyid,
+
+      setTimeout(async () => {
+        console.log(arrUpload);
+        if (index === fileArr.length - 1) {
+          if (req.body._id !== undefined) {
+            var catelogyid = mongoose.Types.ObjectId(req.body.catelogyid);
+            await Product.updateOne({ _id: req.body._id }, [
+              {
+                $set: {
+                  name: req.body.name,
+                  price: req.body.price,
+                  img: arrUpload,
+                  post: req.body.post,
+                  // view: 0,
+                  catelogyid: catelogyid,
+                }
               }
-            }
-          ])
-            .then(re => {
-              res.status(200).json({ mess: 'Thành công', status: true })
-            })
-            .catch(er => {
-              res.status(400).json({ mess: 'Thất bại', status: false })
-            })
-        }
-        else {
-          var now = new Date();
-          var nowlc = new Date().toLocaleString();
-          var pro = {
-            name: req.body.name,
-            price: req.body.price,
-            img: arrUpload,
-            catelogyid: req.body.catelogyid,
-            post: req.body.post,
-            view: 30,
-            created: now,
-            createdlc: nowlc
+            ])
+              .then(re => {
+                res.status(200).json({ mess: 'Thành công', status: true })
+              })
+              .catch(er => {
+                res.status(400).json({ mess: 'Thất bại', status: false })
+              })
           }
-          Product.create(pro)
-            .then(re => {
-              res.status(200).json({ mess: 'Thành công', status: true })
-            })
-            .catch(er => {
-              res.status(400).json({ mess: 'Thất bại', status: false })
-            })
+          else {
+            var now = new Date();
+            var nowlc = new Date().toLocaleString();
+            var pro = {
+              name: req.body.name,
+              price: req.body.price,
+              img: arrUpload,
+              catelogyid: req.body.catelogyid,
+              post: req.body.post,
+              view: 30,
+              created: now,
+              createdlc: nowlc
+            }
+            Product.create(pro)
+              .then(re => {
+                res.status(200).json({ mess: 'Thành công', status: true })
+              })
+              .catch(er => {
+                res.status(400).json({ mess: 'Thất bại', status: false })
+              })
+          }
         }
-      }
-    });
+      });
+    }, 1000);
   }
   catch (err) {
     console.error(err);
   }
 });
 router.get('/viewitem/:id', (req, res, next) => {
-  Product.updateOne({ _id: req.params.id }, { $inc: { view: + 1 } }).exec((err,re)=>{
+  Product.updateOne({ _id: req.params.id }, { $inc: { view: + 1 } }).exec((err, re) => {
     res.status(200).json({ mess: 'Cập nhật lượt xem thành công', status: true });
   })
 })
