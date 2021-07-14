@@ -124,55 +124,56 @@ router.post('/set', async (req, res, next) => {
         });
         await arrUpload.push(uploadRes.url);
       }
-
-      setTimeout(async () => {
-        console.log(arrUpload);
-        if (index === fileArr.length - 1) {
-          if (req.body._id !== undefined) {
-            var catelogyid = mongoose.Types.ObjectId(req.body.catelogyid);
-            await Product.updateOne({ _id: req.body._id }, [
-              {
-                $set: {
-                  name: req.body.name,
-                  price: req.body.price,
-                  img: arrUpload,
-                  post: req.body.post,
-                  // view: 0,
-                  catelogyid: catelogyid,
-                }
+      // setTimeout(async () => {
+      if (arrUpload.length === fileArr.length) {
+        await arrUpload.length === fileArr.length;
+        if (req.body._id !== undefined) {
+          var catelogyid = mongoose.Types.ObjectId(req.body.catelogyid);
+          await Product.updateOne({ _id: req.body._id }, [
+            {
+              $set: {
+                name: req.body.name,
+                // price: req.body.price,
+                price: 'Giá liên hệ',
+                img: arrUpload,
+                post: req.body.post,
+                // view: 0,
+                catelogyid: catelogyid,
               }
-            ])
-              .then(re => {
-                res.status(200).json({ mess: 'Thành công', status: true })
-              })
-              .catch(er => {
-                res.status(400).json({ mess: 'Thất bại', status: false })
-              })
-          }
-          else {
-            var now = new Date();
-            var nowlc = new Date().toLocaleString();
-            var pro = {
-              name: req.body.name,
-              price: req.body.price,
-              img: arrUpload,
-              catelogyid: req.body.catelogyid,
-              post: req.body.post,
-              view: 30,
-              created: now,
-              createdlc: nowlc
             }
-            Product.create(pro)
-              .then(re => {
-                res.status(200).json({ mess: 'Thành công', status: true })
-              })
-              .catch(er => {
-                res.status(400).json({ mess: 'Thất bại', status: false })
-              })
-          }
+          ])
+            .then(re => {
+              res.status(200).json({ mess: 'Thành công', status: true })
+            })
+            .catch(er => {
+              res.status(400).json({ mess: 'Thất bại', status: false })
+            })
         }
-      });
-    }, 1000);
+        else {
+          var now = new Date();
+          var nowlc = new Date().toLocaleString();
+          var pro = {
+            name: req.body.name,
+            // price: req.body.price,
+            price: 'Giá liên hệ',
+            img: arrUpload,
+            catelogyid: req.body.catelogyid,
+            post: req.body.post,
+            view: 30,
+            created: now,
+            createdlc: nowlc
+          }
+          Product.create(pro)
+            .then(re => {
+              res.status(200).json({ mess: 'Thành công', status: true })
+            })
+            .catch(er => {
+              res.status(400).json({ mess: 'Thất bại', status: false })
+            })
+        }
+      }
+    });
+    // }, 1000);
   }
   catch (err) {
     console.error(err);
