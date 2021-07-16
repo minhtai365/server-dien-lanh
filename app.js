@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 const bodyParser = require("body-parser");
 
+var usersRouter = require('./routes/users');
 var indexRouter = require('./routes/index');
 var catelogyRouter = require('./routes/catelogie');
 var servicetypeRouter =require('./routes/servicetype');
@@ -38,6 +39,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/', indexRouter);
+app.use('/users', usersRouter);
 app.use('/info', infoRouter);
 app.use('/catelogies', catelogyRouter);
 app.use('/servicetype', servicetypeRouter);

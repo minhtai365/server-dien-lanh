@@ -57,11 +57,11 @@ router.get('/home', async function (req, res, next) {
     },
     {
       $project: {
-        data: "$data"
-        //  {
-        //   $slice: ["$data", 0, 1],
-        // }
-        ,
+        data:
+        // "$data",
+        {
+          $slice: ["$data", 0, 6],
+        },
         name: "$cate.name"
       }
     },
@@ -73,9 +73,9 @@ router.get('/home', async function (req, res, next) {
     let dt = {}
     await Product.find(async (err, pro) => {
       dt.topview = await pro.sort((a, b) => b.view - a.view).slice(0, 5);
+      dt.cateproduct = re;
+      res.status(200).send(dt);
     });
-    dt.cateproduct = re;
-    res.status(200).send(dt);
   })
 })
 
