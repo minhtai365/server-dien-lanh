@@ -6,7 +6,7 @@ const Info = require('../models/info');
 const { cloudinary } = require('../cdn/cloudinary');
 var upload = multer({ dest: './public/uploads/' })
 router.get('/', (req, res, next) => {
-  Info.find({}, (err, dt) => {
+  Info.findOne((err, dt) => {
     res.send(dt)
   })
 })
