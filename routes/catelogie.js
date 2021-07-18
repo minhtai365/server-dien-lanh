@@ -7,40 +7,59 @@ router.get('/', (req, res, next) => {
   // Catelogies.find((err, dt) => {
   //   res.send(dt)
   // })
-  Product.aggregate([
-    {
-      $group: {
-        _id: '$catelogyid',
-        count: { $sum: 1 }
-      }
-    },
+  Catelogies.aggregate([
     {
       $lookup: {
-        from: "catelogies",
+        from: "products",
         localField: "_id",
-        foreignField: "_id",
+        foreignField: "catelogyid",
         as: "cate"
       },
     },
     {
       $project: {
-        "name": "$cate.name",
-        "createdlc": "$cate.createdlc",
-        //  {
-        //   $slice: ["$data", 0, 1],
-        // }
-        count: "$count"
+        "name": "$name",
+        "createdlc": "$createdlc",
+        count: { $size: "$cate" }
       }
     },
-    {
-      $unwind: "$name"
-    },
-    {
-      $unwind: "$createdlc"
-    }
   ]).then(re => {
     res.status(200).send(re);
   })
+  // Product.aggregate([
+  //   {
+  //     $group: {
+  //       _id: '$catelogyid',
+  //       count: { $sum: 1 }
+  //     }
+  //   },
+  //   {
+  //     $lookup: {
+  //       from: "catelogies",
+  //       localField: "_id",
+  //       foreignField: "_id",
+  //       as: "cate"
+  //     },
+  //   },
+  //   {
+  //     $project: {
+  //       "name": "$cate.name",
+  //       "createdlc": "$cate.createdlc",
+  //       //  {
+  //       //   $slice: ["$data", 0, 1],
+  //       // }
+  //       count: "$count"
+  //     }
+  //   },
+  //   {
+  //     $unwind: "$name"
+  //   },
+  //   {
+  //     $unwind: "$createdlc"
+  //   }
+  // ]).then(re => {
+  //   res.status(200).send(re);
+  // })
 })
 //create catelogy
 router.post('/set', (req, res, next) => {
