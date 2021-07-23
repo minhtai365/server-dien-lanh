@@ -5,10 +5,21 @@ var router = express.Router();
 const Info = require('../models/info');
 const { cloudinary } = require('../cdn/cloudinary');
 var upload = multer({ dest: './public/uploads/' })
+const jwt = require('jsonwebtoken');
 router.get('/', (req, res, next) => {
-  Info.findOne((err, dt) => {
-    res.send(dt)
-  })
+  var token = req.headers.token;
+  try {
+    var resJwt = jwt.verify(token, process.env.SECRET_JWT);
+    console.log(resJwt);
+    if (resJwt) {
+      Info.findOne((err, dt) => {
+        res.send(dt)
+      })
+    }
+  } catch (error) {
+    return res.json('Bạn chưa đăng nhập quyền admin !!!')
+  }
+
 })
 router.post('/set', async (req, res, next) => {
   const { _id, name, email, address, phone, facebook, zalo, tiktok, youtube, introduce, paypolicy, shippolicy, warrantypolicy, logo } = req.body;
