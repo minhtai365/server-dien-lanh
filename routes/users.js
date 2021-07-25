@@ -5,8 +5,6 @@ var User = require('../models/user');
 var jwt = require('jsonwebtoken');
 /* GET users listing. */
 router.post('/login', function (req, res, next) {
-  console.log(req.body.email);
-  console.log(req.body.password);
   User.findOne((err, dt) => {
     if (!dt) {
       var now = new Date;
