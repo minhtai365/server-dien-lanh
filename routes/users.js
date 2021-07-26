@@ -6,16 +6,18 @@ var jwt = require('jsonwebtoken');
 
 var nodemailer = require('nodemailer');
 const { response } = require('express');
-
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 /* GET users listing. */
 router.post('/login', function (req, res, next) {
+  console.log(bcrypt.compareSync('123', req.body.password));
   User.findOne((err, dt) => {
     if (!dt) {
       var now = new Date;
       var nowlc = new Date().toLocaleString();
       User.create({
         email: 'admin',
-        password: '1',
+        password: bcrypt.hashSync('1', saltRounds),
         created: now,
         createdlc: nowlc
       })
