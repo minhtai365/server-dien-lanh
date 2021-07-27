@@ -10,10 +10,7 @@ const bcrypt = require('bcryptjs');
 const saltRounds = bcrypt.genSaltSync(10);
 /* GET users listing. */
 router.post('/login', function (req, res, next) {
-  console.log(bcrypt.compareSync('1', req.body.password));
   User.findOne((err, dt) => {
-    console.log(bcrypt.compareSync('1', dt.password));
-    console.log(dt.password, req.body.password);
     if (!dt) {
       var now = new Date;
       var nowlc = new Date().toLocaleString();
@@ -22,11 +19,12 @@ router.post('/login', function (req, res, next) {
         password: bcrypt.hashSync('1', 10),
         created: now,
         createdlc: nowlc
+      }).then(re => {
+        res.status(200).json({ mess: 'Khởi tạo tài khoản admin thành công' })
       })
     }
     else
       if (dt.email === req.body.email && bcrypt.compareSync(req.body.password, dt.password)) {
-        console.log('123');
         var token = jwt.sign({ _id: dt._id }, process.env.SECRET_JWT);
         res.status(200).json({ mess: 'Đăng nhập thành công', status: true, token: token })
       } else {
