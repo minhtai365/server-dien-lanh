@@ -6,8 +6,8 @@ var jwt = require('jsonwebtoken');
 
 var nodemailer = require('nodemailer');
 const { response } = require('express');
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
+const bcrypt = require('bcryptjs');
+const saltRounds = bcrypt.genSaltSync(10);
 /* GET users listing. */
 router.post('/login', function (req, res, next) {
   console.log(bcrypt.compareSync('123', req.body.password));
